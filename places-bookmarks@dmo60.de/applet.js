@@ -47,10 +47,6 @@ function MyApplet(orientation) {
     this._init(orientation);
 }
 
-function MyApplet(orientation) {
-    this._init(orientation);
-}
-
 MyApplet.prototype = {
 	    __proto__: Applet.IconApplet.prototype,
 
