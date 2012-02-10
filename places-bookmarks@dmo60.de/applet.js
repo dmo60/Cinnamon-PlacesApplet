@@ -6,6 +6,8 @@ const Applet = imports.ui.applet;
 const Gettext = imports.gettext;
 const _ = Gettext.gettext;
 
+let ICON_SIZE = 22;
+
 
 function MyPopupMenuItem()
 {
@@ -18,12 +20,10 @@ MyPopupMenuItem.prototype =
 		_init: function(icon, text, params)
 		{
 			PopupMenu.PopupBaseMenuItem.prototype._init.call(this, params);
-			this.box = new St.BoxLayout({ style_class: 'popup-combobox-item' });
 			this.icon = icon;
-			this.box.add(this.icon);
+			this.addActor(this.icon);
 			this.label = new St.Label({ text: text });
-			this.box.add(this.label);
-			this.addActor(this.box);
+			this.addActor(this.label);
 		}
 };
 
@@ -81,7 +81,7 @@ MyApplet.prototype = {
 
 			// Display default places
 			for ( placeid; placeid < this.defaultPlaces.length; placeid++) {
-				let icon = this.defaultPlaces[placeid].iconFactory(22);
+				let icon = this.defaultPlaces[placeid].iconFactory(ICON_SIZE);
 				this.placeItems[placeid] = new MyPopupMenuItem(icon, _(this.defaultPlaces[placeid].name));
 				this.placeItems[placeid].place = this.defaultPlaces[placeid];
 
@@ -89,14 +89,32 @@ MyApplet.prototype = {
 				this.placeItems[placeid].connect('activate', function(actor, event) {
 					actor.place.launch();
 				});
-			}      
-
+			}
+			
+			// Display Computer / Filesystem
+			let icon = new St.Icon({icon_name: "computer", icon_size: ICON_SIZE, icon_type: St.IconType.FULLCOLOR});
+			this.computerItem = new MyPopupMenuItem(icon, _("Computer"));
+			
+			this.menu.addMenuItem(this.computerItem);
+			this.computerItem.connect('activate', function(actor, event) {
+                Main.Util.spawnCommandLine("nautilus computer://");
+			});
+			
+			let icon = new St.Icon({icon_name: "harddrive", icon_size: ICON_SIZE, icon_type: St.IconType.FULLCOLOR});
+			this.filesystemItem = new MyPopupMenuItem(icon, _("File System"));
+			
+			this.menu.addMenuItem(this.filesystemItem);
+			this.filesystemItem.connect('activate', function(actor, event) {
+                Main.Util.spawnCommandLine("/usr/bin/epmupdater -r root");
+			});
+			
+			// Separator
 			this.menu.addMenuItem(new PopupMenu.PopupSeparatorMenuItem());
 
 			let bookmarkid = 0;
 			// Display default bookmarks
 			for ( bookmarkid; bookmarkid < this.bookmarks.length; bookmarkid++, placeid++) {
-				let icon = this.bookmarks[bookmarkid].iconFactory(22);
+				let icon = this.bookmarks[bookmarkid].iconFactory(ICON_SIZE);
 				this.placeItems[placeid] = new MyPopupMenuItem(icon, _(this.bookmarks[bookmarkid].name));
 				this.placeItems[placeid].place = this.bookmarks[bookmarkid];
 
