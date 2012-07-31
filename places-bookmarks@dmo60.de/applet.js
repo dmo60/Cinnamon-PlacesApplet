@@ -105,7 +105,7 @@ MyApplet.prototype = {
 			
 			this.menu.addMenuItem(this.filesystemItem);
 			this.filesystemItem.connect('activate', function(actor, event) {
-                Main.Util.spawnCommandLine("/usr/bin/epmupdater -r root");
+                Main.Util.spawnCommandLine("nautilus /");
 			});
 			
 			// Separator
