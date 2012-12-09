@@ -35,11 +35,11 @@ MyMenu.prototype = {
 		__proto__: PopupMenu.PopupMenu.prototype,
 
 		_init: function(launcher, orientation) {
-			this._launcher = launcher;        
+			this._launcher = launcher;
 
 			PopupMenu.PopupMenu.prototype._init.call(this, launcher.actor, 0.0, orientation, 0);
 			Main.uiGroup.add_actor(this.actor);
-			this.actor.hide();            
+			this.actor.hide();
 		}
 };
 
@@ -53,7 +53,7 @@ MyApplet.prototype = {
 		_init: function(orientation) {
 			Applet.IconApplet.prototype._init.call(this, orientation);
 
-			try {        
+			try {
 				this.set_applet_icon_name("user-home");
 				this.set_applet_tooltip(_("Places and bookmarks"));
 
@@ -69,7 +69,7 @@ MyApplet.prototype = {
 		},
 
 		on_applet_clicked: function(event) {
-			this.menu.toggle();        
+			this.menu.toggle();
 		},
 
 		_display: function() {
@@ -90,24 +90,24 @@ MyApplet.prototype = {
 					actor.place.launch();
 				});
 			}
-			
+
 			// Display Computer / Filesystem
 			let icon = new St.Icon({icon_name: "computer", icon_size: ICON_SIZE, icon_type: St.IconType.FULLCOLOR});
 			this.computerItem = new MyPopupMenuItem(icon, _("Computer"));
-			
+
 			this.menu.addMenuItem(this.computerItem);
 			this.computerItem.connect('activate', function(actor, event) {
-                Main.Util.spawnCommandLine("nautilus computer://");
+                Main.Util.spawnCommandLine("xdg-open computer://");
 			});
-			
+
 			let icon = new St.Icon({icon_name: "harddrive", icon_size: ICON_SIZE, icon_type: St.IconType.FULLCOLOR});
 			this.filesystemItem = new MyPopupMenuItem(icon, _("File System"));
-			
+
 			this.menu.addMenuItem(this.filesystemItem);
 			this.filesystemItem.connect('activate', function(actor, event) {
-                Main.Util.spawnCommandLine("nautilus /");
+                Main.Util.spawnCommandLine("xdg-open /");
 			});
-			
+
 			// Separator
 			this.menu.addMenuItem(new PopupMenu.PopupSeparatorMenuItem());
 
@@ -126,7 +126,7 @@ MyApplet.prototype = {
 		}
 };
 
-function main(metadata, orientation) {  
+function main(metadata, orientation) {
 	let myApplet = new MyApplet(orientation);
-	return myApplet;      
+	return myApplet;
 };
