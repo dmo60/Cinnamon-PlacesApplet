@@ -6,7 +6,15 @@ const Applet = imports.ui.applet;
 const Gettext = imports.gettext;
 const _ = Gettext.gettext;
 
-let ICON_SIZE = 22;
+const ICON_SIZE = 22;
+
+/* Set APPLET_STYLE to one of the following and restart Cinnamon to apply changes:
+ * "icon-home", "icon-home-symbolic", "icon-folder-symbolic", "text"  */
+const APPLET_STYLE = "icon-home";
+
+/* Set custom APPLET_TEXT here. Set empty string ("") for default.
+ * The text is only shown when APPLET_STYLE is set to "text". */
+const APPLET_TEXT = "";
 
 
 function MyPopupMenuItem()
@@ -48,14 +56,30 @@ function MyApplet(orientation) {
 }
 
 MyApplet.prototype = {
-		__proto__: Applet.IconApplet.prototype,
+		__proto__: Applet.TextIconApplet.prototype,
 
 		_init: function(orientation) {
-			Applet.IconApplet.prototype._init.call(this, orientation);
+			Applet.TextIconApplet.prototype._init.call(this, orientation);
 
 			try {
-				this.set_applet_icon_name("user-home");
-				this.set_applet_tooltip(_("Places and bookmarks"));
+				
+				switch (APPLET_STYLE) {
+				case "text":
+					if (APPLET_TEXT)
+						this.set_applet_label(APPLET_TEXT);
+					else
+						this.set_applet_label(_("Places"));
+					break;
+				case "icon-folder-symbolic":
+					this.set_applet_icon_symbolic_name("folder");
+					break;
+				case "icon-home-symbolic":
+					this.set_applet_icon_symbolic_name("user-home");
+					break;
+				default:
+					this.set_applet_icon_name("user-home");
+					break;
+				}
 
 				this.menuManager = new PopupMenu.PopupMenuManager(this);
 				this.menu = new MyMenu(this, orientation);
